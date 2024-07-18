@@ -28,7 +28,7 @@ const TopNavBar: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("TopNavBar userRole:", userRole);
+    // console.log("TopNavBar userRole:", userRole);
   }, [userRole]);
 
   return (

@@ -69,7 +69,7 @@ const BookingDetailsPage: React.FC<Props> = ({ totalFare }) => {
         const response = await axios.get<Booking[]>("https://e-ticketing.nexpictora.com/trains/bookings", {
           withCredentials: true,
         });
-        console.log("Fetched bookings:", response.data); 
+        // console.log("Fetched bookings:", response.data); 
         setBookings(response.data);
       } catch (error) {
         setError("Error fetching bookings.");
@@ -119,8 +119,8 @@ const BookingDetailsPage: React.FC<Props> = ({ totalFare }) => {
     }
   };
 
-  console.log("User:", user);
-  console.log("Bookings:", bookings);
+  // console.log("User:", user);
+  // console.log("Bookings:", bookings);
 
   return (
     <>

@@ -138,7 +138,7 @@ const CheckoutPage: React.FC = () => {
 
       const { bookingId } = response.data;
 
-      console.log("Booking confirmed successfully:", response.data);
+      // console.log("Booking confirmed successfully:", response.data);
 
       navigate("/bookings", {
         state: {
