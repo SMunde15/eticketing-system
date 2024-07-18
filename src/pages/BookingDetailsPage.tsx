@@ -145,7 +145,7 @@ const BookingDetailsPage: React.FC<Props> = ({ totalFare }) => {
                   <Typography variant="h6" gutterBottom>
                     Passenger: {booking.name}
                   </Typography>
-                  <Typography variant="body1">Age: {booking.email}</Typography>
+                  <Typography variant="body1">Age: {booking.age}</Typography>
                   <Typography variant="body1">Gender: {booking.gender}</Typography>
                   <Typography variant="body1">Train Name: {booking.trainName}</Typography>
                   <Typography variant="body1">Train Number: {booking.trainNumber}</Typography>
