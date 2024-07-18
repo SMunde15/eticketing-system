@@ -13,7 +13,7 @@ const AdminLogin: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/admins/login', {
+      const response = await axios.post('https://e-ticketing.nexpictora.com/admins/login', {
         email,
         password,
       }, {
@@ -24,7 +24,7 @@ const AdminLogin: React.FC = () => {
         login(token, 'admin');
         if (keepSignedIn) {
           localStorage.setItem('keepSignedIn', 'true');
-          localStorage.setItem('token', token); // Save token in localStorage if keepSignedIn is checked
+          localStorage.setItem('token', token); 
         } else {
           localStorage.removeItem('keepSignedIn');
           localStorage.removeItem('token');

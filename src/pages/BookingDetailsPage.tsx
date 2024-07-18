@@ -24,7 +24,7 @@ type Booking = {
   trainName: string;
   trainNumber: string;
   price: number;
-  email: string; // Add email field to match the user's email
+  email: string; 
 };
 
 type User = {
@@ -50,7 +50,7 @@ const BookingDetailsPage: React.FC<Props> = ({ totalFare }) => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get<User>("http://localhost:3000/users/details", {
+        const response = await axios.get<User>("https://e-ticketing.nexpictora.com/users/details", {
           withCredentials: true,
         });
         setUser(response.data);
@@ -66,10 +66,10 @@ const BookingDetailsPage: React.FC<Props> = ({ totalFare }) => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await axios.get<Booking[]>("http://localhost:3000/trains/bookings", {
+        const response = await axios.get<Booking[]>("https://e-ticketing.nexpictora.com/trains/bookings", {
           withCredentials: true,
         });
-        console.log("Fetched bookings:", response.data); // Check the structure of response.data
+        console.log("Fetched bookings:", response.data); 
         setBookings(response.data);
       } catch (error) {
         setError("Error fetching bookings.");
@@ -89,8 +89,7 @@ const BookingDetailsPage: React.FC<Props> = ({ totalFare }) => {
 
   const handleVerifyMobileNumber = async () => {
     try {
-      // Fetch user details for mobile number verification
-      const userDetailsResponse = await axios.get("http://localhost:3000/users/details", {
+      const userDetailsResponse = await axios.get("https://e-ticketing.nexpictora.com/users/details", {
         withCredentials: true,
       });
       const userDetails = userDetailsResponse.data;
@@ -100,7 +99,6 @@ const BookingDetailsPage: React.FC<Props> = ({ totalFare }) => {
         return;
       }
 
-      // Proceed with any other actions after mobile verification
       handleCloseMobileDialog();
     } catch (error) {
       console.error("Error verifying mobile number:", error);
@@ -110,12 +108,10 @@ const BookingDetailsPage: React.FC<Props> = ({ totalFare }) => {
 
   const handleDeleteBooking = async (bookingId: string) => {
     try {
-      // Send delete request to backend
-      await axios.delete(`http://localhost:3000/trains/bookings/${bookingId}`, {
+      await axios.delete(`https://e-ticketing.nexpictora.com/trains/bookings/${bookingId}`, {
         withCredentials: true
       });
 
-      // Remove booking from state
       setBookings((prevBookings) => prevBookings.filter((booking) => booking.bookingId !== bookingId));
     } catch (error) {
       console.error("Error deleting booking:", error);
@@ -159,13 +155,11 @@ const BookingDetailsPage: React.FC<Props> = ({ totalFare }) => {
                   </Button>
                 </div>
               ))}
-              {/* <Typography variant="body1">Total Fare: ₹{totalFare}</Typography> */}
             </CardContent>
           </Card>
         )}
       </Container>
 
-      {/* Mobile Number Verification Dialog */}
       <Dialog open={isMobileDialogOpen} onClose={handleCloseMobileDialog}>
         <DialogTitle>Verify Mobile Number</DialogTitle>
         <DialogContent>

@@ -34,7 +34,7 @@ const SignupPage: React.FC = () => {
     const age = calculateAge(dob);
 
     try {
-      const response = await axios.post('http://localhost:3000/users/signup', {
+      const response = await axios.post('https://e-ticketing.nexpictora.com/users/signup', {
         email,
         password,
         name,

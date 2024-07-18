@@ -22,7 +22,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import axios for making API calls
+import axios from 'axios'; 
 
 const LoginPage: React.FC = () => {
   const { login } = useAuth();
@@ -30,44 +30,42 @@ const LoginPage: React.FC = () => {
   const [userType, setUserType] = useState<'admin' | 'customer'>('customer');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
 const handleLogin = async (event: React.FormEvent) => {
-  event.preventDefault(); // Prevent default form submission behavior
+  event.preventDefault(); 
 
     try {
-      const response = await axios.post(`http://localhost:3000/${userType === 'admin' ? 'admins' : 'users'}/login`, {
+      const response = await axios.post(`https://e-ticketing.nexpictora.com/${userType === 'admin' ? 'admins' : 'users'}/login`, {
         email,
         password,
       }, {
-        withCredentials: true, // Ensure cookies are sent with the request
+        withCredentials: true, 
       });
 
       if (response.status === 200) {
         const { token } = response.data;
 
-        // Save the token and role in your AuthContext
         login(token, userType);
 
-        // Save token in cookies
-        document.cookie = `token=${token};max-age=${keepSignedIn ? 86400 * 7 : 1800};path=/`; 
+        // document.cookie = `token=${token};max-age=${keepSignedIn ? 86400 * 7 : 1800};path=/`; 
 
 
-        localStorage.setItem('userEmail', email); // Save userEmail in localStorage
-        navigate('/dashboard'); // Navigate to dashboard after successful login
+        localStorage.setItem('userEmail', email); 
+        navigate('/dashboard'); 
       }
     } catch (error) {
       console.error("Login failed:", error);
-      setError('Please enter correct credentials'); // Set error state if login fails
+      setError('Please enter correct credentials'); 
     }
   };
 
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: 'admin' | 'customer') => {
     setUserType(newValue);
-    setError(''); // Clear the error message when changing tabs
+    setError(''); 
   };
 
   const handleClickShowPassword = () => {

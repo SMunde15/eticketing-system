@@ -34,7 +34,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = (token: string, role: 'admin' | 'customer') => {
     setIsAuthenticated(true);
     setUserRole(role);
-    Cookies.set('token', token, { expires: 7 });
+    // Cookies.set('token', token, { expires: 7 });
     Cookies.set('userRole', role, { expires: 7 });
   };
 

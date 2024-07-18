@@ -26,7 +26,7 @@ const Dashboard: React.FC = () => {
 
   const fetchTrains = async () => {
     try {
-      const response = await axios.get<Train[]>("http://localhost:3000/trains", {
+      const response = await axios.get<Train[]>("https://e-ticketing.nexpictora.com/trains", {
         withCredentials: true,
       });
       setTrains(response.data);

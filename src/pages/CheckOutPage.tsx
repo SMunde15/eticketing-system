@@ -117,7 +117,7 @@ const CheckoutPage: React.FC = () => {
   const handleVerifyMobileNumber = async () => {
     try {
       // Fetch user details for mobile number verification
-      const userDetailsResponse = await axios.get("http://localhost:3000/users/details", {
+      const userDetailsResponse = await axios.get("https://e-ticketing.nexpictora.com/users/details", {
         withCredentials: true,
       });
       const userDetails = userDetailsResponse.data;
@@ -127,9 +127,8 @@ const CheckoutPage: React.FC = () => {
         return;
       }
 
-      // Make a POST request to confirm ticket
       const response = await axios.post(
-        "http://localhost:3000/trains/confirm-ticket",
+        "https://e-ticketing.nexpictora.com/trains/confirm-ticket",
         {
           train_number: initialTrain.trainNumber,
           passengers,
@@ -139,10 +138,8 @@ const CheckoutPage: React.FC = () => {
 
       const { bookingId } = response.data;
 
-      // Handle successful response
       console.log("Booking confirmed successfully:", response.data);
 
-      // Navigate to BookingDetailsPage with state
       navigate("/bookings", {
         state: {
           passengers,
@@ -151,14 +148,12 @@ const CheckoutPage: React.FC = () => {
         },
       });
 
-      // Update local state or perform further actions on success
       setBookingSuccess(true);
       clearCheckoutData();
     } catch (error) {
-      // Handle error
       console.error("Error confirming booking:", error);
       setIsConfirmDialogOpen(false);
-      setMobileVerificationError("Failed to confirm booking. Please try again later."); // Update error state
+      setMobileVerificationError("Failed to confirm booking. Please try again later.");
     }
   };
 

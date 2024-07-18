@@ -9,7 +9,7 @@ import {
   IconButton,
 } from "@mui/material";
 import axios from "axios";
-import { Train } from "./userDashboard/TrainCard"; // Import Train type
+import { Train } from "./userDashboard/TrainCard"; 
 
 const AddTrainButtonPage: React.FC = () => {
   const [showAddTrainForm, setShowAddTrainForm] = useState(false);
@@ -95,7 +95,7 @@ const AddTrainButtonPage: React.FC = () => {
   const handleAddTrain = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/trains/add",
+        "https://e-ticketing.nexpictora.com/trains/add",
         trainFormData,
         {
           withCredentials: true,
@@ -117,7 +117,6 @@ const AddTrainButtonPage: React.FC = () => {
           AC1: 0,
         },
       });
-      // fetchTrains(); // Call the function to fetch updated trains
     } catch (error) {
       console.error("Error adding train:", error);
     }

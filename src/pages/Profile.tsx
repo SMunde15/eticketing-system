@@ -34,7 +34,7 @@ const Profile: React.FC = () => {
   const fetchUserData = async () => {
     try {
       const token = Cookies.get('token');
-      const response = await axios.get('http://localhost:3000/users/details', {
+      const response = await axios.get('https://e-ticketing.nexpictora.com/users/details', {
         withCredentials: true
       });
       setUserData(response.data);
@@ -61,7 +61,7 @@ const Profile: React.FC = () => {
   const handleSave = async () => {
     try {
       const token = Cookies.get('token');
-      await axios.put('http://localhost:3000/users/details', formData, {
+      await axios.put('https://e-ticketing.nexpictora.com/users/details', formData, {
         withCredentials: true
       });
       setIsEditing(false);
