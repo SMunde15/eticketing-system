@@ -17,20 +17,20 @@ import {
 import { useNavigate } from "react-router-dom";
 
 export interface Train {
-  train_name: string;
-  train_number: string;
-  date_of_availability: string;
-  route_points: {
+  trainName: string;
+  trainNumber: string;
+  dateOfAvailability: string;
+  routePoints: {
     station: string;
-    departure_time: string;
-    arrival_time: string;
-    available_seats: number;
+    departureTime: string;
+    arrivalTime: string;
+    availableSeats: number;
   }[];
   fare: {
     SL: number;
-    "3AC": number;
-    "2AC": number;
-    "1AC": number;
+    AC3: number;
+    AC2: number;
+    AC1: number;
   };
 }
 
@@ -48,7 +48,6 @@ const TrainCard: React.FC<TrainCardProps> = ({ train }) => {
   };
 
   const handleClassSelect = (event: SelectChangeEvent<string>) => {
-    // Access event.target.value as string (safe for both scenarios)
     setSelectedClass(event.target.value as string);
   };
 
@@ -58,42 +57,41 @@ const TrainCard: React.FC<TrainCardProps> = ({ train }) => {
 
   const handleConfirmBuy = () => {
     console.log(
-      `Buying ${selectedClass} ticket for train ${train.train_number}`
+      `Buying ${selectedClass} ticket for train ${train.trainNumber}`
     );
     navigate("/checkout", { state: { train, selectedClass } });
     handleCloseDialog();
   };
-
 
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Card>
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            {train.train_name}
+            {train.trainName}
           </Typography>
-          {train.route_points && train.route_points.length > 0 && (
+          {train.routePoints && train.routePoints.length > 0 && (
             <>
               <Typography variant="body2">
-                Starting Route Point: {train.route_points[0].station} (
-                {train.route_points[0].departure_time})
+                Starting Route Point: {train.routePoints[0].station} (
+                {train.routePoints[0].departureTime})
               </Typography>
               <Typography variant="body2">
                 Last Route Point:{" "}
-                {train.route_points[train.route_points.length - 1].station} (
-                {train.route_points[train.route_points.length - 1].arrival_time}
+                {train.routePoints[train.routePoints.length - 1].station} (
+                {train.routePoints[train.routePoints.length - 1].arrivalTime}
                 )
               </Typography>
               <Typography variant="body2" sx={{ mt: 1 }}>
                 Fare (SL/3AC/2AC/1AC): {train.fare?.SL ?? "-"} /{" "}
-                {train.fare?.["3AC"] ?? "-"} / {train.fare?.["2AC"] ?? "-"} /{" "}
-                {train.fare?.["1AC"] ?? "-"}
+                {train.fare?.AC3 ?? "-"} / {train.fare?.AC2 ?? "-"} /{" "}
+                {train.fare?.AC1 ?? "-"}
               </Typography>
             </>
           )}
-          {train.route_points && (
+          {train.routePoints && (
             <Typography variant="body2">
-              Number of Available Seats: {train.route_points[0].available_seats}
+              Number of Available Seats: {train.routePoints[0].availableSeats}
             </Typography>
           )}
           <Button variant="contained" onClick={handleBuyClick} sx={{ mt: 2 }}>
@@ -111,14 +109,14 @@ const TrainCard: React.FC<TrainCardProps> = ({ train }) => {
               id="class-select"
               value={selectedClass}
               onChange={(event: SelectChangeEvent<string>) =>
-                handleClassSelect(event as SelectChangeEvent<string>)
+                handleClassSelect(event)
               }
               fullWidth
             >
               <MenuItem value="SL">Sleeper (SL)</MenuItem>
-              <MenuItem value="3AC">3 Tier AC (3AC)</MenuItem>
-              <MenuItem value="2AC">2 Tier AC (2AC)</MenuItem>
-              <MenuItem value="1AC">1 Tier AC (1AC)</MenuItem>
+              <MenuItem value="AC3">3 Tier AC (AC3)</MenuItem>
+              <MenuItem value="AC2">2 Tier AC (AC2)</MenuItem>
+              <MenuItem value="AC1">1 Tier AC (AC1)</MenuItem>
             </Select>
           </FormControl>
           {selectedClass &&

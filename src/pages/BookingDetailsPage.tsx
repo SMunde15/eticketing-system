@@ -17,13 +17,21 @@ import axios from "axios";
 import TopNavBar from "../components/TopNavBar";
 
 type Booking = {
-  id: number;
+  bookingId: string;
   name: string;
   age: number;
   gender: string;
-  train_name: string;
-  train_number: string;
+  trainName: string;
+  trainNumber: string;
   price: number;
+  email: string; // Add email field to match the user's email
+};
+
+type User = {
+  email: string;
+  name: string;
+  age: number;
+  mobile: string;
 };
 
 type Props = {
@@ -37,24 +45,41 @@ const BookingDetailsPage: React.FC<Props> = ({ totalFare }) => {
   const [mobileNumber, setMobileNumber] = useState<string>("");
   const [isMobileDialogOpen, setIsMobileDialogOpen] = useState<boolean>(false);
   const [mobileVerificationError, setMobileVerificationError] = useState<string>("");
+  const [user, setUser] = useState<User | null>(null);
 
-useEffect(() => {
-  const fetchBookings = async () => {
-    try {
-      const response = await axios.get<Booking[]>("http://localhost:3000/trains/bookings", {
-        withCredentials: true,
-      });
-      setBookings(response.data);
-    } catch (error) {
-      setError("Error fetching bookings.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await axios.get<User>("http://localhost:3000/users/details", {
+          withCredentials: true,
+        });
+        setUser(response.data);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+        setError("Error fetching user details.");
+      }
+    };
 
-  fetchBookings();
-}, []); // Update the dependency array to include any relevant state changes
+    fetchUserDetails();
+  }, []);
 
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const response = await axios.get<Booking[]>("http://localhost:3000/trains/bookings", {
+          withCredentials: true,
+        });
+        console.log("Fetched bookings:", response.data); // Check the structure of response.data
+        setBookings(response.data);
+      } catch (error) {
+        setError("Error fetching bookings.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookings();
+  }, []);
 
   const handleCloseMobileDialog = () => {
     setMobileNumber("");
@@ -83,20 +108,23 @@ useEffect(() => {
     }
   };
 
-  const handleDeleteBooking = async (bookingId: number) => {
+  const handleDeleteBooking = async (bookingId: string) => {
     try {
       // Send delete request to backend
       await axios.delete(`http://localhost:3000/trains/bookings/${bookingId}`, {
         withCredentials: true
       });
-      
+
       // Remove booking from state
-      setBookings((prevBookings) => prevBookings.filter((booking) => booking.id !== bookingId));
+      setBookings((prevBookings) => prevBookings.filter((booking) => booking.bookingId !== bookingId));
     } catch (error) {
       console.error("Error deleting booking:", error);
       setError("Error deleting booking. Please try again.");
     }
   };
+
+  console.log("User:", user);
+  console.log("Bookings:", bookings);
 
   return (
     <>
@@ -116,23 +144,22 @@ useEffect(() => {
         ) : (
           <Card sx={{ mb: 2 }}>
             <CardContent>
-              {bookings.map((booking) => (
-                <div key={booking.id}>
+              {bookings.filter(booking => booking.email === user?.email).map((booking) => (
+                <div key={booking.bookingId}>
                   <Typography variant="h6" gutterBottom>
                     Passenger: {booking.name}
                   </Typography>
-                  <Typography variant="body1">Age: {booking.age}</Typography>
+                  <Typography variant="body1">Age: {booking.email}</Typography>
                   <Typography variant="body1">Gender: {booking.gender}</Typography>
-                  <Typography variant="body1">Train Name: {booking.train_name}</Typography>
-                  <Typography variant="body1">Train Number: {booking.train_number}</Typography>
-                  <Typography variant="body1">Price: ₹{booking.price}</Typography>
-<Button onClick={() => handleDeleteBooking(booking.id)} color="error" variant="outlined" sx={{ mt: 2 }}>
-  Delete Booking
-</Button>
+                  <Typography variant="body1">Train Name: {booking.trainName}</Typography>
+                  <Typography variant="body1">Train Number: {booking.trainNumber}</Typography>
 
+                  <Button onClick={() => handleDeleteBooking(booking.bookingId)} color="error" variant="outlined" sx={{ mt: 2 }}>
+                    Delete Booking
+                  </Button>
                 </div>
               ))}
-              <Typography variant="body1">Total Fare: ₹{totalFare}</Typography>
+              {/* <Typography variant="body1">Total Fare: ₹{totalFare}</Typography> */}
             </CardContent>
           </Card>
         )}

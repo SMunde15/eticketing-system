@@ -1,20 +1,28 @@
 import React, { useState } from "react";
-import { Container, Typography, Button, Paper, TextField, Snackbar, IconButton } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Button,
+  Paper,
+  TextField,
+  Snackbar,
+  IconButton,
+} from "@mui/material";
 import axios from "axios";
 import { Train } from "./userDashboard/TrainCard"; // Import Train type
 
 const AddTrainButtonPage: React.FC = () => {
   const [showAddTrainForm, setShowAddTrainForm] = useState(false);
   const [trainFormData, setTrainFormData] = useState<Partial<Train>>({
-    train_name: "",
-    train_number: "",
-    date_of_availability: "",
-    route_points: [{ station: "", departure_time: "", arrival_time: "", available_seats: 0 }],
+    trainName: "",
+    trainNumber: "",
+    dateOfAvailability: "",
+    routePoints: [{ station: "", departureTime: "", arrivalTime: "", availableSeats: 0 }],
     fare: {
       SL: 0,
-      "3AC": 0,
-      "2AC": 0,
-      "1AC": 0,
+      AC3: 0,
+      AC2: 0,
+      AC1: 0,
     },
   });
 
@@ -24,38 +32,40 @@ const AddTrainButtonPage: React.FC = () => {
     setShowAddTrainForm((prev) => !prev);
   };
 
- const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
 
-    if (name === "available_seats") {
+    if (name === "availableSeats") {
       setTrainFormData((prev) => ({
         ...prev,
-        route_points: prev.route_points && prev.route_points.length > 0
-          ? prev.route_points.map((point, index) =>
+        routePoints: prev.routePoints && prev.routePoints.length > 0
+          ? prev.routePoints.map((point, index) =>
               index === 0
                 ? {
                     ...point,
-                    available_seats: Number(value),
+                    availableSeats: Number(value),
                   }
                 : point
             )
           : [
               {
                 station: "",
-                departure_time: "",
-                arrival_time: "",
-                available_seats: Number(value),
+                departureTime: "",
+                arrivalTime: "",
+                availableSeats: Number(value),
               },
             ],
       }));
-    } else if (["SL", "3AC", "2AC", "1AC"].includes(name)) {
+    } else if (["SL", "AC3", "AC2", "AC1"].includes(name)) {
       setTrainFormData((prev) => ({
         ...prev,
         fare: {
           SL: prev.fare?.SL ?? 0,
-          "3AC": prev.fare?.["3AC"] ?? 0,
-          "2AC": prev.fare?.["2AC"] ?? 0,
-          "1AC": prev.fare?.["1AC"] ?? 0,
+          AC3: prev.fare?.AC3 ?? 0,
+          AC2: prev.fare?.AC2 ?? 0,
+          AC1: prev.fare?.AC1 ?? 0,
           [name]: Number(value),
         },
       }));
@@ -67,15 +77,17 @@ const AddTrainButtonPage: React.FC = () => {
     }
   };
 
-  const handleRoutePointsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRoutePointsChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const routePoints = e.target.value.split(",").map((point) => point.trim());
     setTrainFormData((prev) => ({
       ...prev,
-      route_points: routePoints.map((station) => ({
+      routePoints: routePoints.map((station) => ({
         station,
-        departure_time: "",
-        arrival_time: "",
-        available_seats: 0,
+        departureTime: "",
+        arrivalTime: "",
+        availableSeats: 0,
       })),
     }));
   };
@@ -94,15 +106,15 @@ const AddTrainButtonPage: React.FC = () => {
       setSnackbarOpen(true);
       setShowAddTrainForm(false);
       setTrainFormData({
-        train_name: "",
-        train_number: "",
-        date_of_availability: "",
-        route_points: [{ station: "", departure_time: "", arrival_time: "", available_seats: 0 }],
+        trainName: "",
+        trainNumber: "",
+        dateOfAvailability: "",
+        routePoints: [{ station: "", departureTime: "", arrivalTime: "", availableSeats: 0 }],
         fare: {
           SL: 0,
-          "3AC": 0,
-          "2AC": 0,
-          "1AC": 0,
+          AC3: 0,
+          AC2: 0,
+          AC1: 0,
         },
       });
       // fetchTrains(); // Call the function to fetch updated trains
@@ -126,58 +138,58 @@ const AddTrainButtonPage: React.FC = () => {
             Add Train
           </Typography>
           <TextField
-            name="train_name"
-            value={trainFormData.train_name}
+            name="trainName"
+            value={trainFormData.trainName}
             onChange={handleFormChange}
             variant="outlined"
             margin="dense"
             required
             fullWidth
-            id="train_name"
+            id="trainName"
             label="Train Name"
           />
           <TextField
-            name="train_number"
-            value={trainFormData.train_number}
+            name="trainNumber"
+            value={trainFormData.trainNumber}
             onChange={handleFormChange}
             variant="outlined"
             margin="dense"
             required
             fullWidth
-            id="train_number"
+            id="trainNumber"
             label="Train Number"
           />
           <TextField
-            name="date_of_availability"
-            value={trainFormData.date_of_availability}
+            name="dateOfAvailability"
+            value={trainFormData.dateOfAvailability}
             onChange={handleFormChange}
             variant="outlined"
             margin="dense"
             required
             fullWidth
-            id="date_of_availability"
+            id="dateOfAvailability"
             label="Date of Availability"
           />
           <TextField
-            name="route_points"
+            name="routePoints"
             onChange={handleRoutePointsChange}
             variant="outlined"
             margin="dense"
             required
             fullWidth
-            id="route_points"
+            id="routePoints"
             label="Route Points (comma separated)"
             helperText="Enter route points separated by commas"
           />
           <TextField
-            name="available_seats"
-            value={trainFormData.route_points?.[0]?.available_seats || ""}
+            name="availableSeats"
+            value={trainFormData.routePoints?.[0]?.availableSeats || ""}
             onChange={handleFormChange}
             variant="outlined"
             margin="dense"
             required
             fullWidth
-            id="available_seats"
+            id="availableSeats"
             label="Available Seats"
             type="number"
           />
@@ -189,43 +201,43 @@ const AddTrainButtonPage: React.FC = () => {
             margin="dense"
             required
             fullWidth
-            id="fare_sl"
+            id="fareSL"
             label="Fare (SL)"
             type="number"
           />
           <TextField
-            name="3AC"
-            value={trainFormData.fare?.["3AC"] || ""}
+            name="AC3"
+            value={trainFormData.fare?.AC3 || ""}
             onChange={handleFormChange}
             variant="outlined"
             margin="dense"
             required
             fullWidth
-            id="fare_3ac"
+            id="fareAC3"
             label="Fare (3AC)"
             type="number"
           />
           <TextField
-            name="2AC"
-            value={trainFormData.fare?.["2AC"] || ""}
+            name="AC2"
+            value={trainFormData.fare?.AC2 || ""}
             onChange={handleFormChange}
             variant="outlined"
             margin="dense"
             required
             fullWidth
-            id="fare_2ac"
+            id="fareAC2"
             label="Fare (2AC)"
             type="number"
           />
           <TextField
-            name="1AC"
-            value={trainFormData.fare?.["1AC"] || ""}
+            name="AC1"
+            value={trainFormData.fare?.AC1 || ""}
             onChange={handleFormChange}
             variant="outlined"
             margin="dense"
             required
             fullWidth
-            id="fare_1ac"
+            id="fareAC1"
             label="Fare (1AC)"
             type="number"
           />

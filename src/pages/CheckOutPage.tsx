@@ -30,6 +30,25 @@ type Passenger = {
   gender: string;
 };
 
+export interface Train {
+  trainName: string;
+  trainNumber: string;
+  dateOfAvailability: string;
+  routePoints: {
+    id: number;
+    station: string;
+    departureTime: string;
+    arrivalTime: string;
+    availableSeats: number;
+  }[];
+  fare: {
+    SL: number;
+    AC3: number;
+    AC2: number;
+    AC1: number;
+  };
+}
+
 const CheckoutPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -112,10 +131,8 @@ const CheckoutPage: React.FC = () => {
       const response = await axios.post(
         "http://localhost:3000/trains/confirm-ticket",
         {
-          train_number: initialTrain.train_number,
+          train_number: initialTrain.trainNumber,
           passengers,
-          selectedClass,
-          mobileNumber,
         },
         { withCredentials: true }
       );
@@ -141,6 +158,7 @@ const CheckoutPage: React.FC = () => {
       // Handle error
       console.error("Error confirming booking:", error);
       setIsConfirmDialogOpen(false);
+      setMobileVerificationError("Failed to confirm booking. Please try again later."); // Update error state
     }
   };
 
@@ -167,14 +185,14 @@ const CheckoutPage: React.FC = () => {
               Checkout
             </Typography>
             <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-              <Typography variant="body1">Train: {initialTrain.train_name}</Typography>
-              <Typography variant="body1">Train Number: {initialTrain.train_number}</Typography>
+              <Typography variant="body1">Train: {initialTrain.trainName}</Typography>
+              <Typography variant="body1">Train Number: {initialTrain.trainNumber}</Typography>
             </Box>
             <Typography variant="body1" gutterBottom>
               Selected Class: {selectedClass}
             </Typography>
             <Typography variant="body1" gutterBottom>
-              Fare: ₹{initialTrain.fare[selectedClass]}
+              Fare: ₹{initialTrain.fare[selectedClass as keyof typeof initialTrain.fare]}
             </Typography>
             <Typography variant="body1" gutterBottom>
               Total Fare: ₹{totalFare}

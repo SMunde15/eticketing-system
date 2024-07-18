@@ -41,10 +41,10 @@ const Dashboard: React.FC = () => {
     }
 
     const filteredTrains = trains.filter((train) =>
-      train.route_points.some(
+      train.routePoints.some(
         (point) =>
           point.station.toLowerCase() === departure.toLowerCase() &&
-          train.route_points.some(
+          train.routePoints.some(
             (point) => point.station.toLowerCase() === destination.toLowerCase()
           )
       )
@@ -57,32 +57,7 @@ const Dashboard: React.FC = () => {
     <Box sx={{ flexGrow: 1 }}>
       <TopNavBar />
       <Container maxWidth="lg" sx={{ mt: 4 }}>
-        <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
-          <TextField
-            variant="outlined"
-            margin="dense"
-            required
-            fullWidth
-            id="departure"
-            label="Departure"
-            value={departure}
-            onChange={(e) => setDeparture(e.target.value)}
-          />
-          <TextField
-            variant="outlined"
-            margin="dense"
-            required
-            fullWidth
-            id="destination"
-            label="Destination"
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-            sx={{ ml: 2 }}
-          />
-          <IconButton color="primary" onClick={handleSearch}>
-            <SearchIcon />
-          </IconButton>
-        </Box>
+ 
         {userRole === "admin" && <AddTrainButtonPage />}
         <Grid container spacing={3}>
           {trains.length > 0 ? (

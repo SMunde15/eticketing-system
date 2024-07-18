@@ -1,4 +1,3 @@
-// src/components/Auth/SignupPage.tsx
 import React, { useState } from 'react';
 import {
   Container,
@@ -13,12 +12,14 @@ import {
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Link, useNavigate } from 'react-router-dom';
+import axios, { AxiosError } from 'axios';
 
 const SignupPage: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [dob, setDob] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const calculateAge = (dateOfBirth: string) => {
@@ -28,11 +29,28 @@ const SignupPage: React.FC = () => {
     return Math.abs(ageDt.getUTCFullYear() - 1970);
   };
 
-  const handleSignup = (event: React.FormEvent) => {
+  const handleSignup = async (event: React.FormEvent) => {
     event.preventDefault();
     const age = calculateAge(dob);
-    console.log(`Name: ${name}, Email: ${email}, Phone: ${phone}, Age: ${age}`);
-    navigate('/dashboard');
+
+    try {
+      const response = await axios.post('http://localhost:3000/users/signup', {
+        email,
+        password,
+        name,
+        age: age.toString(),
+        mobile: phone,
+      });
+
+      console.log('Signup successful:', response.data);
+      navigate('/dashboard');
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error('Signup failed:', error.response?.data || error.message);
+      } else {
+        console.error('Signup failed:', error);
+      }
+    }
   };
 
   return (
@@ -97,13 +115,25 @@ const SignupPage: React.FC = () => {
               value={dob}
               onChange={(e) => setDob(e.target.value)}
             />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="password"
+              label="Password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
               sx={{ mt: 3, mb: 2 }}
-              
             >
               Sign Up
             </Button>
