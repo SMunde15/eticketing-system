@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+@media (hover: none) {
+    .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root:hover {
+        background-color: transparent;
+        ALIGN-SELF: center !important;
+        justify-content: center !important;
+    }
+}
