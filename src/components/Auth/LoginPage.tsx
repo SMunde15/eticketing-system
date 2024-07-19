@@ -23,7 +23,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import backgroundImage from '../assets/image2.jpg'; // Make sure the path is correct
+import backgroundImage from '../../assets/image2.jpg'; // Make sure the path is correct
 
 const LoginPage: React.FC = () => {
   const { login } = useAuth();
