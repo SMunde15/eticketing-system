@@ -10,7 +10,7 @@ import TrainCard, { Train } from "./TrainCard";
 import TopNavBar from "../TopNavBar";
 import AddTrainButtonPage from "../AddTrainButtonPage";
 import { useAuth } from "../../contexts/AuthContext";
-import backgroundImage from "../assets/image1.jpg"; // Make sure the path is correct
+import backgroundImage from "../../assets/image1.jpg"; // Make sure the path is correct
 
 const Dashboard: React.FC = () => {
   const { userRole } = useAuth();
