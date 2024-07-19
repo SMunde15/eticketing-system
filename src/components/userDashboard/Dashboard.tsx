@@ -65,7 +65,7 @@ const Dashboard: React.FC = () => {
       <TopNavBar />
       <Container maxWidth="lg">
         {userRole === "admin" && <AddTrainButtonPage />}
-        <Grid container spacing={2}>
+        <Grid container spacing={2} marginTop={'1rem'}>
           {trains.length > 0 ? (
             trains.map((train, index) => (
               <TrainCard  key={index} train={train} sx={{ mt: '2rem' }} />
