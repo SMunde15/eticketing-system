@@ -3,16 +3,14 @@ import {
   Container,
   Grid,
   Typography,
-  TextField,
-  IconButton,
   Box,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import TrainCard, { Train } from "./TrainCard";
 import TopNavBar from "../TopNavBar";
 import AddTrainButtonPage from "../AddTrainButtonPage";
 import { useAuth } from "../../contexts/AuthContext";
+import backgroundImage from "../assets/image1.jpg"; // Make sure the path is correct
 
 const Dashboard: React.FC = () => {
   const { userRole } = useAuth();
@@ -54,10 +52,18 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        py: 4,
+      }}
+    >
       <TopNavBar />
-      <Container maxWidth="lg" sx={{ mt: 4 }}>
- 
+      <Container maxWidth="lg">
         {userRole === "admin" && <AddTrainButtonPage />}
         <Grid container spacing={3}>
           {trains.length > 0 ? (

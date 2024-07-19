@@ -18,13 +18,12 @@ import {
   InputAdornment,
 } from '@mui/material';
 import TrainIcon from '@mui/icons-material/Train';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios'; 
-import backgroundImage from '../../assets/image1.jpg'; // import the background image
+import axios from 'axios';
+import backgroundImage from '../assets/image2.jpg'; // Make sure the path is correct
 
 const LoginPage: React.FC = () => {
   const { login } = useAuth();
@@ -36,15 +35,15 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-const handleLogin = async (event: React.FormEvent) => {
-  event.preventDefault(); 
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
 
     try {
       const response = await axios.post(`https://e-ticketing.nexpictora.com/${userType === 'admin' ? 'admins' : 'users'}/login`, {
         email,
         password,
       }, {
-        withCredentials: true, 
+        withCredentials: true,
       });
 
       if (response.status === 200) {
@@ -52,41 +51,28 @@ const handleLogin = async (event: React.FormEvent) => {
 
         login(token, userType);
 
-        // document.cookie = `token=${token};max-age=${keepSignedIn ? 86400 * 7 : 1800};path=/`; 
-
-
-        localStorage.setItem('userEmail', email); 
-        navigate('/dashboard'); 
+        localStorage.setItem('userEmail', email);
+        navigate('/dashboard');
       }
     } catch (error) {
       console.error("Login failed:", error);
-      setError('Please enter correct credentials'); 
+      setError('Please enter correct credentials');
     }
   };
 
-
   const handleTabChange = (event: React.SyntheticEvent, newValue: 'admin' | 'customer') => {
     setUserType(newValue);
-    setError(''); 
+    setError('');
   };
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-   return (
-    <Container component="main" maxWidth="xs">
+  return (
+    <Container component="main" maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <CssBaseline />
-      <Paper
-        elevation={3}
-        sx={{
-          padding: 4,
-          mt: 8,
-          backgroundImage: `url(${backgroundImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
+      <Paper elevation={3} sx={{ padding: 4, mt: 8, backgroundColor: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(5px)' }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <TrainIcon />
