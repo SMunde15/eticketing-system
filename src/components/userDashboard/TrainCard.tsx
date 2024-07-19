@@ -39,12 +39,20 @@ interface TrainCardProps {
 }
 
 const TrainCard: React.FC<TrainCardProps> = ({ train }) => {
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openStationDialog, setOpenStationDialog] = useState(false);
+  const [openClassDialog, setOpenClassDialog] = useState(false);
   const [selectedClass, setSelectedClass] = useState<string>("");
+  const [selectedDeparture, setSelectedDeparture] = useState<string>("");
+  const [selectedArrival, setSelectedArrival] = useState<string>("");
   const navigate = useNavigate();
 
   const handleBuyClick = () => {
-    setOpenDialog(true);
+    setOpenStationDialog(true);
+  };
+
+  const handleStationSelect = () => {
+    setOpenStationDialog(false);
+    setOpenClassDialog(true);
   };
 
   const handleClassSelect = (event: SelectChangeEvent<string>) => {
@@ -52,14 +60,17 @@ const TrainCard: React.FC<TrainCardProps> = ({ train }) => {
   };
 
   const handleCloseDialog = () => {
-    setOpenDialog(false);
+    setOpenStationDialog(false);
+    setOpenClassDialog(false);
   };
 
   const handleConfirmBuy = () => {
     console.log(
-      `Buying ${selectedClass} ticket for train ${train.trainNumber}`
+      `Buying ${selectedClass} ticket for train ${train.trainNumber} from ${selectedDeparture} to ${selectedArrival}`
     );
-    navigate("/checkout", { state: { train, selectedClass } });
+    navigate("/checkout", {
+      state: { train, selectedClass, selectedDeparture, selectedArrival },
+    });
     handleCloseDialog();
   };
 
@@ -99,7 +110,59 @@ const TrainCard: React.FC<TrainCardProps> = ({ train }) => {
           </Button>
         </CardContent>
       </Card>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
+
+      <Dialog open={openStationDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Select Stations</DialogTitle>
+        <DialogContent>
+          <FormControl fullWidth>
+            <InputLabel id="departure-select-label">Departure Station</InputLabel>
+            <Select
+              labelId="departure-select-label"
+              id="departure-select"
+              value={selectedDeparture}
+              onChange={(event: SelectChangeEvent<string>) =>
+                setSelectedDeparture(event.target.value as string)
+              }
+              fullWidth
+            >
+              {train.routePoints.map((point, index) => (
+                <MenuItem key={index} value={point.station}>
+                  {point.station}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth sx={{ mt: 2 }}>
+            <InputLabel id="arrival-select-label">Arrival Station</InputLabel>
+            <Select
+              labelId="arrival-select-label"
+              id="arrival-select"
+              value={selectedArrival}
+              onChange={(event: SelectChangeEvent<string>) =>
+                setSelectedArrival(event.target.value as string)
+              }
+              fullWidth
+            >
+              {train.routePoints.map((point, index) => (
+                <MenuItem key={index} value={point.station}>
+                  {point.station}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button
+            onClick={handleStationSelect}
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+            disabled={!selectedDeparture || !selectedArrival}
+          >
+            Next
+          </Button>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={openClassDialog} onClose={handleCloseDialog}>
         <DialogTitle>Select Class</DialogTitle>
         <DialogContent>
           <FormControl fullWidth>
