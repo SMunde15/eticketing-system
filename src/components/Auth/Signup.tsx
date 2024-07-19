@@ -43,7 +43,7 @@ const SignupPage: React.FC = () => {
       });
 
       console.log('Signup successful:', response.data);
-      navigate('/dashboard');
+      navigate('/');
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error('Signup failed:', error.response?.data || error.message);
