@@ -17,12 +17,14 @@ import {
   IconButton,
   InputAdornment,
 } from '@mui/material';
+import TrainIcon from '@mui/icons-material/Train';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'; 
+import backgroundImage from '../../assets/image1.jpg'; // import the background image
 
 const LoginPage: React.FC = () => {
   const { login } = useAuth();
@@ -75,10 +77,19 @@ const handleLogin = async (event: React.FormEvent) => {
    return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <Paper elevation={3} sx={{ padding: 4, mt: 8 }}>
+      <Paper
+        elevation={3}
+        sx={{
+          padding: 4,
+          mt: 8,
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
+            <TrainIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             {userType === 'admin' ? 'Admin Login' : 'User Login'}
