@@ -52,30 +52,30 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <Box
+    <Grid
       sx={{
         flexGrow: 1,
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "100vh",
-        py: 4,
+        // py: 4,
       }}
     >
       <TopNavBar />
       <Container maxWidth="lg">
         {userRole === "admin" && <AddTrainButtonPage />}
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           {trains.length > 0 ? (
             trains.map((train, index) => (
-              <TrainCard key={index} train={train} />
+              <TrainCard  key={index} train={train} sx={{ mt: '2rem' }} />
             ))
           ) : (
             <Typography variant="body2">No trains available</Typography>
           )}
         </Grid>
       </Container>
-    </Box>
+    </Grid>
   );
 };
 

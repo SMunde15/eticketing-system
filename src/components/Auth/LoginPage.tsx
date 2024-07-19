@@ -23,7 +23,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import backgroundImage from '../../assets/image2.jpg'; // Make sure the path is correct
+import backgroundImage from '../../assets/image4.jpg'; // Import the background image
 
 const LoginPage: React.FC = () => {
   const { login } = useAuth();
@@ -70,107 +70,131 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-      <CssBaseline />
-      <Paper elevation={3} sx={{ padding: 4, mt: 8, backgroundColor: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(5px)' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <TrainIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            {userType === 'admin' ? 'Admin Login' : 'User Login'}
-          </Typography>
-          <Tabs
-            value={userType}
-            onChange={handleTabChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="fullWidth"
-          >
-            <Tab label="User" value="customer" />
-            <Tab label="Admin" value="admin" />
-          </Tabs>
-          <Box component="form" onSubmit={handleLogin} sx={{ mt: 3 }}>
-            {error && (
-              <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
-                {error}
-              </Alert>
-            )}
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  value="remember"
-                  color="primary"
-                  checked={keepSignedIn}
-                  onChange={() => setKeepSignedIn(!keepSignedIn)}
-                />
-              }
-              label="Keep me signed in"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              sx={{ mt: 3, mb: 2 }}
+    <Box
+      sx={{
+        position: 'relative',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          filter: 'blur(4px)', // Blur the background image
+          opacity: 0.5,
+          zIndex: -1,
+        },
+      }}
+    >
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Paper elevation={3} sx={{ padding: 4, mt: 8, position: 'relative', border: 'black', borderRadius: '40px'   }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+              <TrainIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              {userType === 'admin' ? 'Admin Login' : 'User Login'}
+            </Typography>
+            <Tabs
+              value={userType}
+              onChange={handleTabChange}
+              indicatorColor="primary"
+              textColor="primary"
+              variant="fullWidth"
             >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item>
-                {userType === 'customer' && (
-                  <Typography variant="body2">
-                    Don't have an account?{' '}
-                    <Link to="/signup" style={{ textDecoration: 'underline', color: 'blue' }}>
-                      Sign Up
-                    </Link>
-                  </Typography>
-                )}
+              <Tab label="User" value="customer" />
+              <Tab label="Admin" value="admin" />
+            </Tabs>
+            <Box component="form" onSubmit={handleLogin} sx={{ mt: 3 }}>
+              {error && (
+                <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+                  {error}
+                </Alert>
+              )}
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    value="remember"
+                    color="primary"
+                    checked={keepSignedIn}
+                    onChange={() => setKeepSignedIn(!keepSignedIn)}
+                  />
+                }
+                label="Keep me signed in"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+              <Grid container>
+                <Grid item>
+                  {userType === 'customer' && (
+                    <Typography variant="body2">
+                      Don't have an account?{' '}
+                      <Link to="/signup" style={{ textDecoration: 'underline', color: 'blue' }}>
+                        Sign Up
+                      </Link>
+                    </Typography>
+                  )}
+                </Grid>
               </Grid>
-            </Grid>
+            </Box>
           </Box>
-        </Box>
-      </Paper>
-    </Container>
+        </Paper>
+      </Container>
+    </Box>
   );
 };
 

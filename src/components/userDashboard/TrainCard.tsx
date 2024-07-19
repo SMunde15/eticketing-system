@@ -36,9 +36,10 @@ export interface Train {
 
 interface TrainCardProps {
   train: Train;
+  sx?: object;
 }
 
-const TrainCard: React.FC<TrainCardProps> = ({ train }) => {
+const TrainCard: React.FC<TrainCardProps> = ({ train, sx }) => {
   const [openStationDialog, setOpenStationDialog] = useState(false);
   const [openClassDialog, setOpenClassDialog] = useState(false);
   const [selectedClass, setSelectedClass] = useState<string>("");
