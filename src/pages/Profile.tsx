@@ -14,7 +14,7 @@ import {
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import TopNavBar from '../components/TopNavBar';
-import { useAuth } from '../contexts/AuthContext'; // Assuming you have an AuthContext
+import { useAuth } from '../contexts/AuthContext';
 
 const Profile: React.FC = () => {
   const { userRole } = useAuth();
@@ -98,55 +98,59 @@ const Profile: React.FC = () => {
           </Typography>
           <Card>
             <CardContent>
-              {isEditing ? (
-                <>
-                  <TextField
-                    label="Name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <TextField
-                    label="Email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    fullWidth
-                    margin="normal"
-                    disabled // Email should typically not be editable
-                  />
-                  <TextField
-                    label="Mobile Number"
-                    name="mobileNumber"
-                    value={formData.mobileNumber}
-                    onChange={handleInputChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <TextField
-                    label="Age"
-                    name="age"
-                    value={formData.age}
-                    onChange={handleInputChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <Button variant="contained" color="primary" onClick={handleSave} sx={{ mt: 2 }}>
-                    Save
-                  </Button>
-                </>
+              {userData ? (
+                isEditing ? (
+                  <>
+                    <TextField
+                      label="Name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      fullWidth
+                      margin="normal"
+                    />
+                    <TextField
+                      label="Email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      fullWidth
+                      margin="normal"
+                      disabled // Email should typically not be editable
+                    />
+                    <TextField
+                      label="Mobile Number"
+                      name="mobileNumber"
+                      value={formData.mobileNumber}
+                      onChange={handleInputChange}
+                      fullWidth
+                      margin="normal"
+                    />
+                    <TextField
+                      label="Age"
+                      name="age"
+                      value={formData.age}
+                      onChange={handleInputChange}
+                      fullWidth
+                      margin="normal"
+                    />
+                    <Button variant="contained" color="primary" onClick={handleSave} sx={{ mt: 2 }}>
+                      Save
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Typography variant="h6">Name: {userData.name || 'N/A'}</Typography>
+                    <Typography variant="h6">Email: {userData.email || 'N/A'}</Typography>
+                    <Typography variant="h6">Mobile Number: {userData.mobile || 'N/A'}</Typography>
+                    <Typography variant="h6">Age: {userData.age || 'N/A'}</Typography>
+                    <Button variant="contained" color="primary" onClick={() => setIsEditing(true)} sx={{ mt: 2 }}>
+                      Edit
+                    </Button>
+                  </>
+                )
               ) : (
-                <>
-                  <Typography variant="h6">Name: {userData.name || 'N/A'}</Typography>
-                  <Typography variant="h6">Email: {userData.email || 'N/A'}</Typography>
-                  <Typography variant="h6">Mobile Number: {userData.mobile || 'N/A'}</Typography>
-                  <Typography variant="h6">Age: {userData.age || 'N/A'}</Typography>
-                  <Button variant="contained" color="primary" onClick={() => setIsEditing(true)} sx={{ mt: 2 }}>
-                    Edit
-                  </Button>
-                </>
+                <Typography variant="h6">No user data available</Typography>
               )}
             </CardContent>
           </Card>
