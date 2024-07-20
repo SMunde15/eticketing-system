@@ -7,14 +7,17 @@ import {
   Button,
   Card,
   CardContent,
-  CircularProgress,
   Snackbar,
+  Alert,
+  CircularProgress,
 } from '@mui/material';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import TopNavBar from '../components/TopNavBar';
+import { useAuth } from '../contexts/AuthContext'; // Import the useAuth hook
 
-const Profile: React.FC = () => {
+const ProfilePage: React.FC = () => {
+  const { userRole } = useAuth(); // Use the role from context
   const [userData, setUserData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -24,6 +27,7 @@ const Profile: React.FC = () => {
     mobileNumber: '',
     age: '',
   });
+  const [error, setError] = useState<string | null>(null);
   const [showSnackbar, setShowSnackbar] = useState(false);
 
   useEffect(() => {
@@ -32,10 +36,14 @@ const Profile: React.FC = () => {
 
   const fetchUserData = async () => {
     try {
-      const token = Cookies.get('token');
-      const response = await axios.get('https://e-ticketing.nexpictora.com/users/details', {
-        withCredentials: true
+      const apiUrl = userRole === 'admin'
+        ? 'https://e-ticketing.nexpictora.com/admin/users/details'
+        : 'https://e-ticketing.nexpictora.com/users/details';
+
+      const response = await axios.get(apiUrl, {
+        withCredentials: true,
       });
+
       setUserData(response.data);
       setFormData({
         name: response.data.name || '',
@@ -46,6 +54,7 @@ const Profile: React.FC = () => {
       setIsLoading(false);
     } catch (error) {
       console.error('Error fetching user data:', error);
+      setError('Error fetching user data.');
     }
   };
 
@@ -59,15 +68,19 @@ const Profile: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      const token = Cookies.get('token');
-      await axios.put('https://e-ticketing.nexpictora.com/users/details', formData, {
-        withCredentials: true
+      const apiUrl = userRole === 'admin'
+        ? 'https://e-ticketing.nexpictora.com/admin/users/details'
+        : 'https://e-ticketing.nexpictora.com/users/details';
+
+      await axios.put(apiUrl, formData, {
+        withCredentials: true,
       });
       setIsEditing(false);
       fetchUserData();
-      setShowSnackbar(true); // Show snackbar on success
+      setShowSnackbar(true);
     } catch (error) {
       console.error('Error updating user data:', error);
+      setError('Error updating user data.');
     }
   };
 
@@ -80,75 +93,91 @@ const Profile: React.FC = () => {
   }
 
   return (
-    <><TopNavBar />
-    <Container>
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Profile
-        </Typography>
-        <Card>
-          <CardContent>
-            {isEditing ? (
-              <>
-                <TextField
-                  label="Name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  fullWidth
-                  margin="normal" />
-                <TextField
-                  label="Email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  fullWidth
-                  margin="normal"
-                  disabled // Email should typically not be editable
-                />
-                <TextField
-                  label="Mobile Number"
-                  name="mobileNumber"
-                  value={formData.mobileNumber}
-                  onChange={handleInputChange}
-                  fullWidth
-                  margin="normal" />
-                <TextField
-                  label="Age "
-                  name="age"
-                  value={formData.age}
-                  onChange={handleInputChange}
-                  fullWidth
-                  margin="normal"
-                   />
-                <Button variant="contained" color="primary" onClick={handleSave} sx={{ mt: 2 }}>
-                  Save
-                </Button>
-              </>
-            ) : (
-              <>
-                <Typography variant="h6">Name: {userData.name || 'N/A'}</Typography>
-                <Typography variant="h6">Email: {userData.email || 'N/A'}</Typography>
-                <Typography variant="h6">Mobile Number: {userData.mobile || 'N/A'}</Typography>
-                <Typography variant="h6">Date of Birth: {userData.age || 'N/A'}</Typography>
-                <Button variant="contained" color="primary" onClick={() => setIsEditing(true)} sx={{ mt: 2 }}>
-                  Edit
-                </Button>
-              </>
-            )}
-          </CardContent>
-        </Card>
-      </Box>
-      <Snackbar
-        open={showSnackbar}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        message="DETAILS UPDATED"
-        ContentProps={{
-          sx: { backgroundColor: '#4caf50' },
-        }} />
-    </Container></>
+    <>
+      <TopNavBar />
+      <Container>
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h4" gutterBottom>
+            Profile
+          </Typography>
+          <Card>
+            <CardContent>
+              {isEditing ? (
+                <>
+                  <TextField
+                    label="Name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    fullWidth
+                    margin="normal"
+                  />
+                  <TextField
+                    label="Email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    fullWidth
+                    margin="normal"
+                    disabled
+                  />
+                  <TextField
+                    label="Mobile Number"
+                    name="mobileNumber"
+                    value={formData.mobileNumber}
+                    onChange={handleInputChange}
+                    fullWidth
+                    margin="normal"
+                  />
+                  <TextField
+                    label="Age"
+                    name="age"
+                    value={formData.age}
+                    onChange={handleInputChange}
+                    fullWidth
+                    margin="normal"
+                  />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSave}
+                    sx={{ mt: 2 }}
+                  >
+                    Save
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Typography variant="h6">Name: {userData.name || 'N/A'}</Typography>
+                  <Typography variant="h6">Email: {userData.email || 'N/A'}</Typography>
+                  <Typography variant="h6">Mobile Number: {userData.mobile || 'N/A'}</Typography>
+                  <Typography variant="h6">Date of Birth: {userData.age || 'N/A'}</Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => setIsEditing(true)}
+                    sx={{ mt: 2 }}
+                  >
+                    Edit
+                  </Button>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </Box>
+        <Snackbar
+          open={showSnackbar}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+          message="Profile updated"
+          ContentProps={{
+            sx: { backgroundColor: '#4caf50' },
+          }}
+        />
+        {error && <Alert severity="error">{error}</Alert>}
+      </Container>
+    </>
   );
 };
 
-export default Profile;
+export default ProfilePage;

@@ -23,6 +23,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import TopNavBar from "../components/TopNavBar";
+import { useAuth } from "../contexts/AuthContext"; // Import the useAuth hook
 
 type Passenger = {
   name: string;
@@ -53,6 +54,8 @@ const CheckoutPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { train: initialTrain, selectedClass } = location.state || {};
+  const { userRole } = useAuth(); // Get the user role from context
+
   const [passengers, setPassengers] = useState<Passenger[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newPassenger, setNewPassenger] = useState<Partial<Passenger>>({});
@@ -117,9 +120,12 @@ const CheckoutPage: React.FC = () => {
   const handleVerifyMobileNumber = async () => {
     try {
       // Fetch user details for mobile number verification
-      const userDetailsResponse = await axios.get("https://e-ticketing.nexpictora.com/users/details", {
-        withCredentials: true,
-      });
+      const userDetailsResponse = await axios.get(
+        userRole === 'admin'
+          ? 'https://e-ticketing.nexpictora.com/admin/users/details'
+          : 'https://e-ticketing.nexpictora.com/users/details',
+        { withCredentials: true }
+      );
       const userDetails = userDetailsResponse.data;
 
       if (userDetails.mobile !== mobileNumber) {
@@ -128,7 +134,9 @@ const CheckoutPage: React.FC = () => {
       }
 
       const response = await axios.post(
-        "https://e-ticketing.nexpictora.com/trains/confirm-ticket",
+        userRole === 'admin'
+          ? 'https://e-ticketing.nexpictora.com/admin/trains/confirm-ticket'
+          : 'https://e-ticketing.nexpictora.com/trains/confirm-ticket',
         {
           train_number: initialTrain.trainNumber,
           passengers,
@@ -137,8 +145,6 @@ const CheckoutPage: React.FC = () => {
       );
 
       const { bookingId } = response.data;
-
-      // console.log("Booking confirmed successfully:", response.data);
 
       navigate("/bookings", {
         state: {
