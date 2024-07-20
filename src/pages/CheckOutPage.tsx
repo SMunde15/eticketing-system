@@ -21,7 +21,7 @@ import {
   Alert,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios, { AxiosError } from 'axios';
 import TopNavBar from "../components/TopNavBar";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -154,14 +154,22 @@ const CheckoutPage: React.FC = () => {
         },
       });
 
-      setBookingSuccess(true);
-      clearCheckoutData();
-    } catch (error) {
-      console.error("Error confirming booking:", error);
+    setBookingSuccess(true);
+    clearCheckoutData();
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      // Handle AxiosError
+      console.error("Error confirming booking:", error.response ? error.response.data : error.message);
       setIsConfirmDialogOpen(false);
-      setMobileVerificationError("Failed to confirm booking. Please try again later.");
+      setMobileVerificationError(error.response?.data?.message || "Failed to confirm booking. Please try again later.");
+    } else {
+      // Handle non-AxiosError
+      console.error("Unexpected error:", error);
+      setIsConfirmDialogOpen(false);
+      setMobileVerificationError("An unexpected error occurred. Please try again later.");
     }
-  };
+  }
+};
 
   if (!initialTrain) {
     return (
