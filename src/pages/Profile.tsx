@@ -23,7 +23,7 @@ const Profile: React.FC = () => {
     name: '',
     email: '',
     mobileNumber: '',
-    dateOfBirth: '',
+    age: '',
   });
   const [showSnackbar, setShowSnackbar] = useState(false);
 
@@ -41,8 +41,8 @@ const Profile: React.FC = () => {
       setFormData({
         name: response.data.name || '',
         email: response.data.email || '',
-        mobileNumber: response.data.mobileNumber || '',
-        dateOfBirth: response.data.dateOfBirth || '',
+        mobileNumber: response.data.mobile || '',
+        age: response.data.age || '',
       });
       setIsLoading(false);
     } catch (error) {
@@ -115,9 +115,9 @@ const Profile: React.FC = () => {
                   fullWidth
                   margin="normal" />
                 <TextField
-                  label="Date of Birth"
+                  label="Age "
                   name="dateOfBirth"
-                  value={formData.dateOfBirth}
+                  value={formData.age}
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
