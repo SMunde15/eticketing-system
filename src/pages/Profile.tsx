@@ -133,8 +133,8 @@ const Profile: React.FC = () => {
               <>
                 <Typography variant="h6">Name: {userData.name || 'N/A'}</Typography>
                 <Typography variant="h6">Email: {userData.email || 'N/A'}</Typography>
-                <Typography variant="h6">Mobile Number: {userData.mobileNumber || 'N/A'}</Typography>
-                <Typography variant="h6">Date of Birth: {userData.dateOfBirth || 'N/A'}</Typography>
+                <Typography variant="h6">Mobile Number: {userData.mobile || 'N/A'}</Typography>
+                <Typography variant="h6">Date of Birth: {userData.age || 'N/A'}</Typography>
                 <Button variant="contained" color="primary" onClick={() => setIsEditing(true)} sx={{ mt: 2 }}>
                   Edit
                 </Button>
