@@ -23,7 +23,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import TopNavBar from "../components/TopNavBar";
-import { useAuth } from "../contexts/AuthContext"; // Import the useAuth hook
+import { useAuth } from "../contexts/AuthContext";
 
 type Passenger = {
   name: string;
@@ -54,8 +54,7 @@ const CheckoutPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { train: initialTrain, selectedClass } = location.state || {};
-  const { userRole } = useAuth(); // Get the user role from context
-
+  const { userRole } = useAuth();
   const [passengers, setPassengers] = useState<Passenger[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newPassenger, setNewPassenger] = useState<Partial<Passenger>>({});
@@ -133,10 +132,9 @@ const CheckoutPage: React.FC = () => {
         return;
       }
 
+
       const response = await axios.post(
-        userRole === 'admin'
-          ? 'https://e-ticketing.nexpictora.com/trains/confirm-ticket'
-          : 'https://e-ticketing.nexpictora.com/trains/confirm-ticket',
+        "https://e-ticketing.nexpictora.com/trains/confirm-ticket",
         {
           train_number: initialTrain.trainNumber,
           passengers,
@@ -145,6 +143,8 @@ const CheckoutPage: React.FC = () => {
       );
 
       const { bookingId } = response.data;
+
+      // console.log("Booking confirmed successfully:", response.data);
 
       navigate("/bookings", {
         state: {
