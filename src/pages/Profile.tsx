@@ -121,10 +121,7 @@ const Profile: React.FC = () => {
                   onChange={handleInputChange}
                   fullWidth
                   margin="normal"
-                  type="date"
-                  InputLabelProps={{
-                    shrink: true,
-                  }} />
+                   />
                 <Button variant="contained" color="primary" onClick={handleSave} sx={{ mt: 2 }}>
                   Save
                 </Button>
