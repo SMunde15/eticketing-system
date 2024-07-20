@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import TopNavBar from "../components/TopNavBar";
-import { useAuth } from '../contexts/AuthContext'; // Import the useAuth hook
+import { useAuth } from '../contexts/AuthContext'; 
 
 type Booking = {
   bookingId: string;
@@ -35,8 +35,12 @@ type User = {
   mobile: string;
 };
 
-const BookingDetailsPage: React.FC = () => {
-  const { userRole } = useAuth(); // Use the role from context
+type Props = {
+  totalFare: number;
+};
+
+const BookingDetailsPage: React.FC<Props> = ({ totalFare }) => {
+  const { userRole } = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +53,7 @@ const BookingDetailsPage: React.FC = () => {
     const fetchUserDetails = async () => {
       try {
         const apiUrl = userRole === 'admin' 
-          ? 'https://e-ticketing.nexpictora.com/admin/users/details'
+          ? 'https://e-ticketing.nexpictora.com/admins/details'
           : 'https://e-ticketing.nexpictora.com/users/details';
         
         const response = await axios.get<User>(apiUrl, {
@@ -68,13 +72,10 @@ const BookingDetailsPage: React.FC = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const apiUrl = userRole === 'admin' 
-          ? 'https://e-ticketing.nexpictora.com/admin/trains/bookings'
-          : 'https://e-ticketing.nexpictora.com/trains/bookings';
-        
-        const response = await axios.get<Booking[]>(apiUrl, {
+        const response = await axios.get<Booking[]>("https://e-ticketing.nexpictora.com/trains/bookings", {
           withCredentials: true,
         });
+        // console.log("Fetched bookings:", response.data); 
         setBookings(response.data);
       } catch (error) {
         setError("Error fetching bookings.");
@@ -84,7 +85,7 @@ const BookingDetailsPage: React.FC = () => {
     };
 
     fetchBookings();
-  }, [userRole]);
+  }, []);
 
   const handleCloseMobileDialog = () => {
     setMobileNumber("");
@@ -92,10 +93,10 @@ const BookingDetailsPage: React.FC = () => {
     setMobileVerificationError("");
   };
 
-  const handleVerifyMobileNumber = async () => {
+   const handleVerifyMobileNumber = async () => {
     try {
       const apiUrl = userRole === 'admin' 
-        ? 'https://e-ticketing.nexpictora.com/admin/users/details'
+        ? 'https://e-ticketing.nexpictora.com/admins/details'
         : 'https://e-ticketing.nexpictora.com/users/details';
         
       const userDetailsResponse = await axios.get(apiUrl, {
@@ -117,77 +118,83 @@ const BookingDetailsPage: React.FC = () => {
 
   const handleDeleteBooking = async (bookingId: string) => {
     try {
-      const apiUrl = userRole === 'admin' 
-        ? `https://e-ticketing.nexpictora.com/admin/trains/bookings/${bookingId}`
-        : `https://e-ticketing.nexpictora.com/trains/bookings/${bookingId}`;
-
-      await axios.delete(apiUrl, {
-        withCredentials: true,
+      await axios.delete(`https://e-ticketing.nexpictora.com/trains/bookings/${bookingId}`, {
+        withCredentials: true
       });
-      setBookings(bookings.filter((booking) => booking.bookingId !== bookingId));
+
+      setBookings((prevBookings) => prevBookings.filter((booking) => booking.bookingId !== bookingId));
     } catch (error) {
-      setError("Error deleting booking.");
+      console.error("Error deleting booking:", error);
+      setError("Error deleting booking. Please try again.");
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <Alert severity="error">{error}</Alert>;
+  // console.log("User:", user);
+  // console.log("Bookings:", bookings);
 
   return (
     <>
       <TopNavBar />
-      <Container>
-        <Typography variant="h4" gutterBottom>
-          {userRole === 'admin' ? 'Admin Booking Details' : 'Your Booking Details'}
+      <Container maxWidth="md" sx={{ mt: 4 }}>
+        <Typography variant="h5" gutterBottom>
+          Booking Details
         </Typography>
-        {bookings.length > 0 ? (
-          bookings.map((booking) => (
-            <Card key={booking.bookingId} sx={{ mb: 2 }}>
-              <CardContent>
-                <Typography variant="h6">Train Name: {booking.trainName}</Typography>
-                <Typography variant="h6">Train Number: {booking.trainNumber}</Typography>
-                <Typography variant="h6">Price: {booking.price}</Typography>
-                <Typography variant="h6">Passenger Name: {booking.name}</Typography>
-                <Typography variant="h6">Age: {booking.age}</Typography>
-                <Typography variant="h6">Gender: {booking.gender}</Typography>
-                <Typography variant="h6">Email: {booking.email}</Typography>
-                {userRole === 'admin' && (
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => setIsMobileDialogOpen(true)}
-                    sx={{ mt: 2 }}
-                  >
+        {loading ? (
+          <Typography variant="body1">Loading...</Typography>
+        ) : error ? (
+          <Typography variant="body1" color="error">
+            {error}
+          </Typography>
+        ) : bookings.length === 0 ? (
+          <Typography variant="body1">No bookings available</Typography>
+        ) : (
+          <Card sx={{ mb: 2 }}>
+            <CardContent>
+              {bookings.filter(booking => booking.email === user?.email).map((booking) => (
+                <div key={booking.bookingId}>
+                  <Typography variant="h6" gutterBottom>
+                    Passenger: {booking.name}
+                  </Typography>
+                  <Typography variant="body1">Age: {booking.age}</Typography>
+                  <Typography variant="body1">Gender: {booking.gender}</Typography>
+                  <Typography variant="body1">Train Name: {booking.trainName}</Typography>
+                  <Typography variant="body1">Train Number: {booking.trainNumber}</Typography>
+
+                  <Button onClick={() => handleDeleteBooking(booking.bookingId)} color="error" variant="outlined" sx={{ mt: 2 }}>
                     Delete Booking
                   </Button>
-                )}
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <Typography variant="h6">No bookings found.</Typography>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
         )}
-        <Dialog open={isMobileDialogOpen} onClose={handleCloseMobileDialog}>
-          <DialogTitle>Verify Mobile Number</DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Mobile Number"
-              type="text"
-              fullWidth
-              variant="standard"
-              value={mobileNumber}
-              onChange={(e) => setMobileNumber(e.target.value)}
-            />
-            {mobileVerificationError && <Alert severity="error">{mobileVerificationError}</Alert>}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseMobileDialog}>Cancel</Button>
-            <Button onClick={handleVerifyMobileNumber}>Verify</Button>
-          </DialogActions>
-        </Dialog>
       </Container>
+
+      <Dialog open={isMobileDialogOpen} onClose={handleCloseMobileDialog}>
+        <DialogTitle>Verify Mobile Number</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Mobile Number"
+            type="tel"
+            fullWidth
+            value={mobileNumber}
+            onChange={(e) => setMobileNumber(e.target.value)}
+          />
+          {mobileVerificationError && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {mobileVerificationError}
+            </Alert>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseMobileDialog}>Cancel</Button>
+          <Button onClick={handleVerifyMobileNumber} color="primary">
+            Verify
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

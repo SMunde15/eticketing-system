@@ -37,7 +37,7 @@ const ProfilePage: React.FC = () => {
   const fetchUserData = async () => {
     try {
       const apiUrl = userRole === 'admin'
-        ? 'https://e-ticketing.nexpictora.com/admin/users/details'
+        ? 'https://e-ticketing.nexpictora.com/admins/details'
         : 'https://e-ticketing.nexpictora.com/users/details';
 
       const response = await axios.get(apiUrl, {
@@ -69,7 +69,7 @@ const ProfilePage: React.FC = () => {
   const handleSave = async () => {
     try {
       const apiUrl = userRole === 'admin'
-        ? 'https://e-ticketing.nexpictora.com/admin/users/details'
+        ? 'https://e-ticketing.nexpictora.com/admins/details'
         : 'https://e-ticketing.nexpictora.com/users/details';
 
       await axios.put(apiUrl, formData, {

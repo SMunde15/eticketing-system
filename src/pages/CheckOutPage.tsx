@@ -122,7 +122,7 @@ const CheckoutPage: React.FC = () => {
       // Fetch user details for mobile number verification
       const userDetailsResponse = await axios.get(
         userRole === 'admin'
-          ? 'https://e-ticketing.nexpictora.com/admin/users/details'
+          ? 'https://e-ticketing.nexpictora.com/admins/details'
           : 'https://e-ticketing.nexpictora.com/users/details',
         { withCredentials: true }
       );
@@ -135,7 +135,7 @@ const CheckoutPage: React.FC = () => {
 
       const response = await axios.post(
         userRole === 'admin'
-          ? 'https://e-ticketing.nexpictora.com/admin/trains/confirm-ticket'
+          ? 'https://e-ticketing.nexpictora.com/trains/confirm-ticket'
           : 'https://e-ticketing.nexpictora.com/trains/confirm-ticket',
         {
           train_number: initialTrain.trainNumber,
